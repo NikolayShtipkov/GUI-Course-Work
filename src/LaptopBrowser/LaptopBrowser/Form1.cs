@@ -1,4 +1,6 @@
-﻿namespace LaptopBrowser
+﻿using System.IO;
+
+namespace LaptopBrowser
 {
     public partial class Form1 : Form
     {
@@ -16,12 +18,14 @@
 
         private void InitializeLaptops()
         {
+            string imagesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images");
+
             laptops = new Dictionary<string, Laptop>
             {
                 { "Dell XPS 13",
-                    new Laptop("Dell XPS 13", "dell.jpg", 2000, "Intel i7", "16GB", 13.3, "Intel Iris") },
+                    new Laptop("Dell XPS 13", Path.Combine(imagesPath, "dell"), 3789, "Intel i7", "16GB", 13.3, "Intel Iris") },
                 { "HP Spectre x360",
-                    new Laptop("HP Spectre x360", "hp.jpg", 1800, "Intel i5", "8GB", 14, "Intel UHD") }
+                    new Laptop("HP Spectre x360", Path.Combine(imagesPath, "hp"), 3149, "Intel i5", "8GB", 14, "Intel UHD") }
             };
 
             foreach (var model in laptops.Keys)
@@ -44,21 +48,52 @@
             {
                 var laptop = laptops[selectedModel];
                 labelTitle.Text = laptop.Name;
-                pictureBoxLaptop.ImageLocation = laptop.ImagePath;
                 labelPrice.Text = $"Цена: {laptop.Price} лв.";
                 labelProcessor.Text = $"Процесор: {laptop.Processor}";
                 labelMemory.Text = $"Памет: {laptop.Memory}";
                 labelDisplay.Text = $"Дисплей: {laptop.Display}";
                 labelGraphics.Text = $"Видео карта: {laptop.GraphicsCard}";
 
-                if (File.Exists(laptop.ImagePath))
+                string[] imageFiles = Directory.GetFiles(laptop.ImageFolder, "*.jpg");
+                if (imageFiles.Length == 0)
                 {
-                    pictureBoxLaptop.Image = Image.FromFile(laptop.ImagePath);
+                    MessageBox.Show("No images found in the folder: " + laptop.ImageFolder);
+                    return;
                 }
-                else
+
+                try
                 {
-                    pictureBoxLaptop.Image = null; // Set a default image or leave blank
+                    pictureBoxLaptop.Image = Image.FromFile(imageFiles[0]);
                 }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading image: {imageFiles[0]}\n{ex.Message}");
+                }
+
+                // Load thumbnails
+                for (int i = 0; i <= 3; i++)
+                {
+                    int picNum = i + 1;
+                    PictureBox thumbnailBox = (PictureBox)Controls.Find("smallPictureBox" + picNum, true)[0];
+                    try
+                    {
+                        thumbnailBox.Image = Image.FromFile(imageFiles[i]);
+                        thumbnailBox.Tag = imageFiles[i];
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error loading thumbnail: {imageFiles[i]}\n{ex.Message}");
+                    }
+                }
+            }
+        }
+
+        private void SmallPicture_Click(object sender, EventArgs e)
+        {
+            PictureBox clickedBox = (PictureBox)sender;
+            if (clickedBox.Tag is string imagePath && File.Exists(imagePath))
+            {
+                pictureBoxLaptop.Image = Image.FromFile(imagePath);
             }
         }
 
@@ -69,7 +104,7 @@
                 var laptop = laptops[selectedModel];
                 decimal finalPrice = laptop.Price;
 
-                if (checkBoxBackpack.Checked) finalPrice += 15;
+                if (checkBoxBackpack.Checked) finalPrice += 30;
                 if (checkBoxOS.Checked) finalPrice += 15;
 
                 string paymentMethod;
