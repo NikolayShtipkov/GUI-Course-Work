@@ -14,7 +14,7 @@
             string memory, double display, string graphicsCard)
         {
             Name = name;
-            ImageFolder = imageFolder; //Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", imageFolder);
+            ImageFolder = imageFolder;
             Price = price;
             Processor = processor;
             Memory = memory;

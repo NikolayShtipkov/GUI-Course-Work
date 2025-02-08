@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace LaptopBrowser
+﻿namespace LaptopBrowser
 {
     public partial class Form1 : Form
     {
@@ -14,6 +12,17 @@ namespace LaptopBrowser
             InitializeComponent();
             InitializeLaptops();
             SelectFirstLaptop();
+            InitializeComboBox();
+        }
+
+        private void InitializeComboBox()
+        {
+            for (int i = 1; i <= 10; i++)
+            {
+                comboBoxQuantity.Items.Add(i);
+            }
+
+            comboBoxQuantity.SelectedIndex = 0;
         }
 
         private void InitializeLaptops()
@@ -70,7 +79,6 @@ namespace LaptopBrowser
                     MessageBox.Show($"Error loading image: {imageFiles[0]}\n{ex.Message}");
                 }
 
-                // Load thumbnails
                 for (int i = 0; i <= 3; i++)
                 {
                     int picNum = i + 1;
@@ -104,13 +112,16 @@ namespace LaptopBrowser
                 var laptop = laptops[selectedModel];
                 decimal finalPrice = laptop.Price;
 
+                int quantity = comboBoxQuantity.SelectedItem is int ? (int)comboBoxQuantity.SelectedItem : 1;
+                finalPrice = laptop.Price * quantity;
+
                 if (checkBoxBackpack.Checked) finalPrice += 30;
                 if (checkBoxOS.Checked) finalPrice += 15;
 
                 string paymentMethod;
                 if (checkBoxPayment.Checked)
                 {
-                    finalPrice *= 1.2m; // Увеличение с 20%
+                    finalPrice *= 1.2m;
                     decimal monthlyPayment = finalPrice / 12;
                     paymentMethod = $"На изплащане (Месечна вноска: {monthlyPayment:F2} лв.)";
                 }

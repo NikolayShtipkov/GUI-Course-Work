@@ -44,6 +44,8 @@
             smallPictureBox2 = new PictureBox();
             smallPictureBox3 = new PictureBox();
             smallPictureBox4 = new PictureBox();
+            comboBoxQuantity = new ComboBox();
+            quantityLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBoxLaptop).BeginInit();
             ((System.ComponentModel.ISupportInitialize)smallPictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)smallPictureBox2).BeginInit();
@@ -206,11 +208,30 @@
             smallPictureBox4.TabStop = false;
             smallPictureBox4.Click += SmallPicture_Click;
             // 
+            // comboBoxQuantity
+            // 
+            comboBoxQuantity.FormattingEnabled = true;
+            comboBoxQuantity.Location = new Point(831, 243);
+            comboBoxQuantity.Name = "comboBoxQuantity";
+            comboBoxQuantity.Size = new Size(52, 28);
+            comboBoxQuantity.TabIndex = 22;
+            // 
+            // quantityLabel
+            // 
+            quantityLabel.AutoSize = true;
+            quantityLabel.Location = new Point(777, 246);
+            quantityLabel.Name = "quantityLabel";
+            quantityLabel.Size = new Size(48, 20);
+            quantityLabel.TabIndex = 23;
+            quantityLabel.Text = "Брой:";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1346, 623);
+            Controls.Add(quantityLabel);
+            Controls.Add(comboBoxQuantity);
             Controls.Add(smallPictureBox4);
             Controls.Add(smallPictureBox3);
             Controls.Add(smallPictureBox2);
@@ -256,5 +277,7 @@
         private PictureBox smallPictureBox2;
         private PictureBox smallPictureBox3;
         private PictureBox smallPictureBox4;
+        private ComboBox comboBoxQuantity;
+        private Label quantityLabel;
     }
 }
